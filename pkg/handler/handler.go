@@ -5,9 +5,15 @@ import (
 
 	"github.com/gin-gonic/gin"
 	httpapi "github.com/tsarkovmi/http_api"
+	"github.com/tsarkovmi/http_api/pkg/service"
 )
 
 type Handler struct {
+	services *service.Service
+}
+
+func Newhandler(services *service.Service) *Handler {
+	return &Handler{services: services}
 }
 
 func (h *Handler) InitRourers() *gin.Engine {
