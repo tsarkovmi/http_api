@@ -1,11 +1,11 @@
 package main
 
 import (
-	"log"
 	"os"
 
 	"github.com/joho/godotenv"
 	_ "github.com/lib/pq" //решает ошибку error init db: sql: unknown driver "postgres" (forgotten import?) exit status 1
+	"github.com/sirupsen/logrus"
 	"github.com/spf13/viper"
 	httpapi "github.com/tsarkovmi/http_api"
 	"github.com/tsarkovmi/http_api/pkg/handler"
@@ -14,12 +14,13 @@ import (
 )
 
 func main() {
+	logrus.SetFormatter(new(logrus.JSONFormatter))
 	if err := initConfig(); err != nil {
-		log.Fatalf("error init configs: %s", err.Error())
+		logrus.Fatalf("error init configs: %s", err.Error())
 	}
 
 	if err := godotenv.Load(); err != nil {
-		log.Fatalf("error loadint env file: %s", err.Error())
+		logrus.Fatalf("error loadint env file: %s", err.Error())
 	}
 
 	db, err := repository.NewPostgresDB(repository.Config{
@@ -32,7 +33,7 @@ func main() {
 	})
 
 	if err != nil {
-		log.Fatalf("error init db: %s", err.Error())
+		logrus.Fatalf("error init db: %s", err.Error())
 	}
 
 	//внедряем зависимости по порядку
@@ -43,12 +44,12 @@ func main() {
 
 	srv := new(httpapi.Server)
 	if err := srv.Run(viper.GetString("port"), handlers.InitRourers()); err != nil {
-		log.Fatalf("error running http server: %s", err.Error())
+		logrus.Fatalf("error running http server: %s", err.Error())
 	}
 }
 
 func initConfig() error {
 	viper.AddConfigPath("configs")
-	viper.SetConfigName("config")
+	viper.SetConfigName("configs")
 	return viper.ReadInConfig()
 }
