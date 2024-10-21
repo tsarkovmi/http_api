@@ -8,6 +8,7 @@ import (
 // Интерфейс для взаимодействия с основной логикой хэндлеря
 type CRUD interface {
 	CreateWorker(worker httpapi.Worker) (int, error)
+	FindWorkerByID(workerId int) (httpapi.Worker, error)
 }
 
 // Структура для интерфейса

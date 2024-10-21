@@ -12,6 +12,7 @@ type CRUD interface {
 		И возвращает id созданого в базе пользователя и ошибку
 	*/
 	CreateWorker(worker httpapi.Worker) (int, error)
+	FindWorkerByID(workerId int) (httpapi.Worker, error)
 }
 
 // Структура для интерфейса, вызывается из хэндлера

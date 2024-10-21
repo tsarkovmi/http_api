@@ -23,6 +23,7 @@ func GetWorkers(c *gin.Context) {
 добавление нового работника в срез
 возврат кода статуса
 */
+
 func (h *Handler) PostWorkers(c *gin.Context) {
 	var input httpapi.Worker
 
@@ -61,18 +62,20 @@ func (h *Handler) PostWorkers(c *gin.Context) {
 При нахождении воркера - печатает его и статус
 В ином случае воркер не найден
 */
-func GetWorkerByID(c *gin.Context) {
+
+func (h *Handler) GetWorkerByID(c *gin.Context) {
 	id, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
 		return
 	}
 
-	for _, a := range workers {
-		if a.ID == id {
-			c.IndentedJSON(http.StatusOK, a)
-			return
-		}
+	worker, err := h.services.CRUD.FindWorkerByID(id)
+	if err != nil {
+		newErrorResponse(c, http.StatusInternalServerError, err.Error())
+		return
 	}
-	c.IndentedJSON(http.StatusNotFound, gin.H{"message": "workers not found"})
+
+	c.IndentedJSON(http.StatusOK, worker)
+	//c.IndentedJSON(http.StatusNotFound, gin.H{"message": "workers not found"})
 
 }

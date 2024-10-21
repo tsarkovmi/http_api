@@ -18,7 +18,7 @@ func (h *Handler) InitRourers() *gin.Engine {
 	router := gin.New()
 
 	router.GET("/workers", GetWorkers)
-	router.GET("/workers/:id", GetWorkerByID)
+	router.GET("/workers/:id", h.GetWorkerByID)
 	router.POST("/workers", h.PostWorkers)
 
 	return router
