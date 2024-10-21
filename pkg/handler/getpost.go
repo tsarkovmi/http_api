@@ -8,9 +8,22 @@ import (
 	httpapi "github.com/tsarkovmi/http_api"
 )
 
+type getAllListsResponse struct {
+	Data []httpapi.Worker `json:"data"`
+}
+
 // Создает JSON из фрагмента worker и записывает JSON в ответ
-func GetWorkers(c *gin.Context) {
-	c.IndentedJSON(http.StatusOK, workers)
+func (h *Handler) GetWorkers(c *gin.Context) {
+
+	lists, err := h.services.CRUD.GetAllWorkers()
+	if err != nil {
+		newErrorResponse(c, http.StatusInternalServerError, err.Error())
+		return
+	}
+	c.JSON(http.StatusOK, getAllListsResponse{
+		lists,
+	})
+	/*c.IndentedJSON(http.StatusOK, workers)*/
 }
 
 /*
@@ -23,7 +36,6 @@ func GetWorkers(c *gin.Context) {
 добавление нового работника в срез
 возврат кода статуса
 */
-
 func (h *Handler) PostWorkers(c *gin.Context) {
 	var input httpapi.Worker
 

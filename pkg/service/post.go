@@ -20,3 +20,7 @@ func (s *PostService) CreateWorker(worker httpapi.Worker) (int, error) {
 func (s *PostService) FindWorkerByID(workerId int) (httpapi.Worker, error) {
 	return s.repo.FindWorkerByID(workerId)
 }
+
+func (s *PostService) GetAllWorkers() ([]httpapi.Worker, error) {
+	return s.repo.GetAllWorkers()
+}

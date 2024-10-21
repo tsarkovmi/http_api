@@ -42,4 +42,11 @@ func (r *PostPostgres) FindWorkerByID(workerId int) (httpapi.Worker, error) {
 	return worker, err
 }
 
+func (r *PostPostgres) GetAllWorkers() ([]httpapi.Worker, error) {
+	var workers []httpapi.Worker
+	query := fmt.Sprintf("SELECT * FROM %s", workersTable)
+	err := r.db.Select(&workers, query)
+	return workers, err
+}
+
 //func (r *PostPostgres) AllWorkers() (httpapi.Worker)

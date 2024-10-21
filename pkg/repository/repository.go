@@ -9,6 +9,7 @@ import (
 type CRUD interface {
 	CreateWorker(worker httpapi.Worker) (int, error)
 	FindWorkerByID(workerId int) (httpapi.Worker, error)
+	GetAllWorkers() ([]httpapi.Worker, error)
 }
 
 // Структура для интерфейса
