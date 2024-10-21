@@ -2,9 +2,9 @@ package handler
 
 import (
 	"net/http"
+	"strconv"
 
 	"github.com/gin-gonic/gin"
-	"github.com/sirupsen/logrus"
 	httpapi "github.com/tsarkovmi/http_api"
 )
 
@@ -23,14 +23,36 @@ func GetWorkers(c *gin.Context) {
 добавление нового работника в срез
 возврат кода статуса
 */
-func PostWorkers(c *gin.Context) {
-	var newWorker httpapi.Worker
+func (h *Handler) PostWorkers(c *gin.Context) {
+	var input httpapi.Worker
 
-	if err := c.BindJSON(&newWorker); err != nil {
-		logrus.Errorf("error bindJSON: %s", err.Error())
+	if err := c.BindJSON(&input); err != nil {
+		newErrorResponse(c, http.StatusBadRequest, err.Error())
+		return
+		//logrus.Errorf("error bindJSON: %s", err.Error())
 	}
-	workers = append(workers, newWorker)
-	c.IndentedJSON(http.StatusCreated, newWorker)
+
+	/*
+		ЗДЕСЬ ПОЛУЧИЛИ ДАННЫЕ И РАСПАРСИЛИ ИХ,
+		ТЕПЕРЬ ДОЛЖНЫ ПЕРЕДАТЬ ДАННЫЕ НА СЛОЙ НИЖЕ
+		В СЕРВИС
+	*/
+
+	id, err := h.services.CRUD.CreateWorker(input)
+	if err != nil {
+		newErrorResponse(c, http.StatusInternalServerError, err.Error())
+		return
+	}
+
+	c.JSON(http.StatusOK, map[string]interface{}{
+		"id": id,
+	})
+
+	/*
+		//нужно добавлять в БД, а не в срез
+		workers = append(workers, input) //в тупую добавляется в сущесвтующий срез
+		c.IndentedJSON(http.StatusCreated, input)
+	*/
 
 }
 
@@ -40,7 +62,10 @@ func PostWorkers(c *gin.Context) {
 В ином случае воркер не найден
 */
 func GetWorkerByID(c *gin.Context) {
-	id := c.Param("id")
+	id, err := strconv.Atoi(c.Param("id"))
+	if err != nil {
+		return
+	}
 
 	for _, a := range workers {
 		if a.ID == id {

@@ -1,12 +1,20 @@
 package service
 
-import "github.com/tsarkovmi/http_api/pkg/repository"
+import (
+	httpapi "github.com/tsarkovmi/http_api"
+	"github.com/tsarkovmi/http_api/pkg/repository"
+)
 
-//Интерфейс для взаимодействия с основной логикой хэндлера
+// Интерфейс для взаимодействия с основной логикой хэндлера
 type CRUD interface {
+	/*
+		Метод, который принимает worker в качестве аргумента
+		И возвращает id созданого в базе пользователя и ошибку
+	*/
+	CreateWorker(worker httpapi.Worker) (int, error)
 }
 
-//Структура для интерфейса, вызывается из хэндлера
+// Структура для интерфейса, вызывается из хэндлера
 type Service struct {
 	CRUD
 }
@@ -14,5 +22,7 @@ type Service struct {
 // Сервис получает на вход Репозиторий, сам сервис вызывается из хэндлера
 // ЭТО И ЕСТЬ ВНЕДРЕНИЕ ЗАВИСИМОСТЕЙ
 func NewService(repos *repository.Repository) *Service {
-	return &Service{}
+	return &Service{
+		CRUD: NewPostService(repos.CRUD),
+	}
 }
