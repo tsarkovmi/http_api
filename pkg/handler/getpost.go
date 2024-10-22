@@ -1,7 +1,6 @@
 package handler
 
 import (
-	"fmt"
 	"net/http"
 	"strconv"
 
@@ -12,15 +11,25 @@ import (
 func (h *Handler) GetWorkers(c *gin.Context) {
 
 	workers, err := h.services.CRUD.GetAllWorkers()
-	fmt.Println(workers[1])
 	if err != nil {
 		newErrorResponse(c, http.StatusInternalServerError, err.Error())
 		return
 	}
 
-	c.TOML(http.StatusOK, workers)
-	c.XML(http.StatusOK, workers)
-	c.JSON(http.StatusOK, workers)
+	for _, a := range workers {
+		result, err := serializeWorker(a)
+		if err != nil {
+			newErrorResponse(c, http.StatusInternalServerError, err.Error())
+		}
+		c.String(http.StatusOK, result)
+	}
+
+	/*
+		c.TOML(http.StatusOK, workers)
+		c.XML(http.StatusOK, workers)
+		c.JSON(http.StatusOK, workers)
+	*/
+
 }
 
 func (h *Handler) PostWorkers(c *gin.Context) {
@@ -60,8 +69,16 @@ func (h *Handler) GetWorkerByID(c *gin.Context) {
 		return
 	}
 
-	c.TOML(http.StatusOK, worker)
-	c.XML(http.StatusOK, worker)
-	c.JSON(http.StatusOK, worker)
+	result, err := serializeWorker(worker)
 
+	if err != nil {
+		newErrorResponse(c, http.StatusInternalServerError, err.Error())
+	}
+	c.String(http.StatusOK, result)
+	/*
+		c.TOML(http.StatusOK, worker)
+		c.XML(http.StatusOK, worker)
+		c.JSON(http.StatusOK, worker)
+
+	*/
 }
