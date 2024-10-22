@@ -1,0 +1,26 @@
+name: http-app
+
+services:
+  httpapi:
+    build: ./
+    command: ./wait-for-postgres.sh db ./httpapi
+    ports:
+      - 8080:8080
+    depends_on:
+      - db
+    environment:
+      - DB_PASSWORD=qwerty
+
+  db:
+    restart: always
+    image: postgres:latest
+    # путь к локальной директории которая будет 
+    # синхронизировать все файлы с внутренней 
+    # директорией контейнера
+    # в качестве вн. директории указывается к стандартной папке для хранения всех файлов БД postgres
+    volumes:
+      - ./.database/data:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_PASSWORD=qwerty
+    ports:
+      - 5436:5432
