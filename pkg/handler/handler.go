@@ -14,6 +14,7 @@ func Newhandler(services *service.Service) *Handler {
 }
 
 func (h *Handler) InitRourers() *gin.Engine {
+	gin.SetMode(gin.ReleaseMode)
 	router := gin.New()
 
 	router.GET("/workers", h.GetWorkers)
