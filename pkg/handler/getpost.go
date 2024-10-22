@@ -1,6 +1,7 @@
 package handler
 
 import (
+	"fmt"
 	"net/http"
 	"strconv"
 
@@ -8,41 +9,26 @@ import (
 	httpapi "github.com/tsarkovmi/http_api"
 )
 
-/*
-type getAllListsResponse struct {
-	Data []httpapi.Worker `json:"data"`
-}
-*/
-
-// Создает JSON из фрагмента worker и записывает JSON в ответ
 func (h *Handler) GetWorkers(c *gin.Context) {
 
 	workers, err := h.services.CRUD.GetAllWorkers()
+	fmt.Println(workers[1])
 	if err != nil {
 		newErrorResponse(c, http.StatusInternalServerError, err.Error())
 		return
 	}
 
-	c.IndentedJSON(http.StatusOK, workers)
+	c.TOML(http.StatusOK, workers)
+	c.XML(http.StatusOK, workers)
+	c.JSON(http.StatusOK, workers)
 }
 
-/*
-Тут должен быть response в котором будет
-возвращаться новый уникальный ID
-который здесь же и будет сгенерирован
-
-вызов BindJSON чтобы привязать
-полученный JSON к newWorker
-добавление нового работника в срез
-возврат кода статуса
-*/
 func (h *Handler) PostWorkers(c *gin.Context) {
 	var input httpapi.Worker
 
 	if err := c.BindJSON(&input); err != nil {
 		newErrorResponse(c, http.StatusBadRequest, err.Error())
 		return
-		//logrus.Errorf("error bindJSON: %s", err.Error())
 	}
 
 	/*
@@ -60,20 +46,7 @@ func (h *Handler) PostWorkers(c *gin.Context) {
 	c.JSON(http.StatusOK, map[string]interface{}{
 		"id": id,
 	})
-
-	/*
-		//нужно добавлять в БД, а не в срез
-		workers = append(workers, input) //в тупую добавляется в сущесвтующий срез
-		c.IndentedJSON(http.StatusCreated, input)
-	*/
-
 }
-
-/*
-Поиск воркера по ID, цикл по срезу воркеров
-При нахождении воркера - печатает его и статус
-В ином случае воркер не найден
-*/
 
 func (h *Handler) GetWorkerByID(c *gin.Context) {
 	id, err := strconv.Atoi(c.Param("id"))
@@ -87,7 +60,8 @@ func (h *Handler) GetWorkerByID(c *gin.Context) {
 		return
 	}
 
-	c.IndentedJSON(http.StatusOK, worker)
-	//c.IndentedJSON(http.StatusNotFound, gin.H{"message": "workers not found"})
+	c.TOML(http.StatusOK, worker)
+	c.XML(http.StatusOK, worker)
+	c.JSON(http.StatusOK, worker)
 
 }
