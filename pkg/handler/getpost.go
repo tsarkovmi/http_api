@@ -8,24 +8,18 @@ import (
 	httpapi "github.com/tsarkovmi/http_api"
 )
 
-func (h *Handler) GetWorkers(c *gin.Context) {
-
-	workers, err := h.services.CRUD.GetAllWorkers()
-	if err != nil {
-		newErrorResponse(c, http.StatusInternalServerError, err.Error())
-		return
-	}
-
-	resp := initSerResponse()
-	for _, a := range workers {
-		err := resp.serializeWorker(a)
-		if err != nil {
-			newErrorResponse(c, http.StatusInternalServerError, err.Error())
-		}
-	}
-	c.IndentedJSON(http.StatusOK, resp)
-
-}
+//	@Summary		GetWorkers
+//	@Tags			POST
+//	@Description	Post Worker to DB
+//	@ID				get-workers
+//	@Accept			json
+//	@Produce		json
+//  @Param 			input json httpapi.Worker
+//	@Success		200		{integer}	integer	1
+//	@Failure		400,404	{object}	errorResponse
+//	@Failure		500		{object}	errorResponse
+//	@Failure		default	{object}	errorResponse
+//	@Router			/workers/ [post]
 
 func (h *Handler) PostWorkers(c *gin.Context) {
 	var input httpapi.Worker
@@ -51,6 +45,50 @@ func (h *Handler) PostWorkers(c *gin.Context) {
 		"id": id,
 	})
 }
+
+//	@Summary		GetWorkers
+//	@Tags			GET
+//	@Description	Get All workers from DB
+//	@ID				get-workers
+//	@Accept			json
+//	@Produce		json
+//	@Success		200		{integer}	integer	1
+//	@Failure		400,404	{object}	errorResponse
+//	@Failure		500		{object}	errorResponse
+//	@Failure		default	{object}	errorResponse
+//	@Router			/workers/ [get]
+
+func (h *Handler) GetWorkers(c *gin.Context) {
+
+	workers, err := h.services.CRUD.GetAllWorkers()
+	if err != nil {
+		newErrorResponse(c, http.StatusInternalServerError, err.Error())
+		return
+	}
+
+	resp := initSerResponse()
+	for _, a := range workers {
+		err := resp.serializeWorker(a)
+		if err != nil {
+			newErrorResponse(c, http.StatusInternalServerError, err.Error())
+		}
+	}
+	c.IndentedJSON(http.StatusOK, resp)
+
+}
+
+//	@Summary		GetWorkerByID
+//	@Tags			GET
+//	@Description	Get One workerr from DB
+//	@ID				get-worker
+//	@Accept			json
+//	@Produce		json
+//  @Param 			id json int
+//	@Success		200		{integer}	integer	1
+//	@Failure		400,404	{object}	errorResponse
+//	@Failure		500		{object}	errorResponse
+//	@Failure		default	{object}	errorResponse
+//	@Router			/workers/{id} [get]
 
 func (h *Handler) GetWorkerByID(c *gin.Context) {
 	id, err := strconv.Atoi(c.Param("id"))

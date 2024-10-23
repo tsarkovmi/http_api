@@ -15,8 +15,8 @@ type serResponse struct {
 	TomlResp []string `json:"TOML"`
 }
 
-func initSerResponse() serResponse {
-	return serResponse{
+func initSerResponse() *serResponse {
+	return &serResponse{
 		JsonResp: []string{},
 		XmlResp:  []string{},
 		TomlResp: []string{},

@@ -11,10 +11,18 @@ import (
 	"github.com/sirupsen/logrus"
 	"github.com/spf13/viper"
 	httpapi "github.com/tsarkovmi/http_api"
+	_ "github.com/tsarkovmi/http_api/docs"
 	"github.com/tsarkovmi/http_api/pkg/handler"
 	"github.com/tsarkovmi/http_api/pkg/repository"
 	"github.com/tsarkovmi/http_api/pkg/service"
 )
+
+//	@title			Http App API
+//	@version		1.0
+//	@description	API server Application for Test Task
+
+//	@host		localhost:8080
+//	@BasePath	/
 
 func main() {
 	logrus.SetFormatter(new(logrus.JSONFormatter))
