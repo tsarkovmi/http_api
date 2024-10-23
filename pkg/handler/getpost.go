@@ -8,18 +8,17 @@ import (
 	httpapi "github.com/tsarkovmi/http_api"
 )
 
-//	@Summary		GetWorkers
-//	@Tags			POST
-//	@Description	Post Worker to DB
-//	@ID				get-workers
+// PostWorkers godoc
+//	@Summary		Add a new worker
+//	@Description	Создание нового работника в базе данных
+//	@Tags			workers
 //	@Accept			json
 //	@Produce		json
-//  @Param 			input json httpapi.Worker
-//	@Success		200		{integer}	integer	1
-//	@Failure		400,404	{object}	errorResponse
-//	@Failure		500		{object}	errorResponse
-//	@Failure		default	{object}	errorResponse
-//	@Router			/workers/ [post]
+//	@Param			input	body		httpapi.Worker			true	"Worker info"
+//	@Success		200		{object}	map[string]interface{}	"ID созданного работника"
+//	@Failure		400		{object}	ErrorResponse			"Неверный формат данных"
+//	@Failure		500		{object}	ErrorResponse			"Ошибка сервера"
+//	@Router			/workers [post]
 
 func (h *Handler) PostWorkers(c *gin.Context) {
 	var input httpapi.Worker
@@ -46,17 +45,14 @@ func (h *Handler) PostWorkers(c *gin.Context) {
 	})
 }
 
-//	@Summary		GetWorkers
-//	@Tags			GET
-//	@Description	Get All workers from DB
-//	@ID				get-workers
-//	@Accept			json
+// GetWorkers godoc
+//	@Summary		Get all workers
+//	@Description	Получение списка всех работников из базы данных
+//	@Tags			workers
 //	@Produce		json
-//	@Success		200		{integer}	integer	1
-//	@Failure		400,404	{object}	errorResponse
-//	@Failure		500		{object}	errorResponse
-//	@Failure		default	{object}	errorResponse
-//	@Router			/workers/ [get]
+//	@Success		200	{object}	serResponse		"Список всех работников"
+//	@Failure		500	{object}	ErrorResponse	"Ошибка сервера"
+//	@Router			/workers [get]
 
 func (h *Handler) GetWorkers(c *gin.Context) {
 
@@ -78,17 +74,15 @@ func (h *Handler) GetWorkers(c *gin.Context) {
 
 }
 
-//	@Summary		GetWorkerByID
-//	@Tags			GET
-//	@Description	Get One workerr from DB
-//	@ID				get-worker
-//	@Accept			json
+// GetWorkerByID godoc
+//	@Summary		Get a worker by ID
+//	@Description	Получение информации о работнике по его ID
+//	@Tags			workers
 //	@Produce		json
-//  @Param 			id json int
-//	@Success		200		{integer}	integer	1
-//	@Failure		400,404	{object}	errorResponse
-//	@Failure		500		{object}	errorResponse
-//	@Failure		default	{object}	errorResponse
+//	@Param			id	path		int				true	"Worker ID"
+//	@Success		200	{object}	serResponse		"Данные о работнике"
+//	@Failure		500	{object}	ErrorResponse	"Ошибка сервера"
+//	@Failure		400	{object}	ErrorResponse	"Неверный ID"
 //	@Router			/workers/{id} [get]
 
 func (h *Handler) GetWorkerByID(c *gin.Context) {
