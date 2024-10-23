@@ -67,12 +67,13 @@ func (h *Handler) GetWorkers(c *gin.Context) {
 	}
 
 	resp := initSerResponse()
-	for _, a := range workers {
-		err := resp.serializeWorker(a)
-		if err != nil {
-			newErrorResponse(c, http.StatusInternalServerError, err.Error())
-		}
+
+	err = resp.serializeWorker(workers)
+	if err != nil {
+		newErrorResponse(c, http.StatusInternalServerError, err.Error())
+		return
 	}
+
 	c.IndentedJSON(http.StatusOK, resp)
 
 }
@@ -107,6 +108,7 @@ func (h *Handler) GetWorkerByID(c *gin.Context) {
 
 	if err != nil {
 		newErrorResponse(c, http.StatusInternalServerError, err.Error())
+		return
 	}
 	c.IndentedJSON(http.StatusOK, resp)
 
