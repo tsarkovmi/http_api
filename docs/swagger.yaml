@@ -1,0 +1,128 @@
+basePath: /
+definitions:
+  handler.errorResponse:
+    properties:
+      message:
+        type: string
+    type: object
+  handler.serResponse:
+    properties:
+      JSON:
+        type: string
+      TOML:
+        type: string
+      XML:
+        type: string
+    type: object
+  httpapi.Worker:
+    properties:
+      age:
+        description: являются реализацией фреймворка gin
+        type: integer
+      id:
+        description: чтобы искало в FindWorkerById
+        type: integer
+      name:
+        description: Валидируют наличие данных полей в теле запроса
+        type: string
+      occupation:
+        type: string
+      salary:
+        type: number
+    required:
+    - age
+    - name
+    - occupation
+    - salary
+    type: object
+host: localhost:8080
+info:
+  contact:
+    email: support@swagger.io
+    name: API Support
+    url: http://www.swagger.io/support
+  description: API для управления данными о работниках (CRUD операции).
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  termsOfService: http://swagger.io/terms/
+  title: Workers Management API
+  version: "1.0"
+paths:
+  /workers:
+    get:
+      description: Получение списка всех работников из базы данных
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Список всех работников
+          schema:
+            $ref: '#/definitions/handler.serResponse'
+        "500":
+          description: Ошибка сервера
+          schema:
+            $ref: '#/definitions/handler.errorResponse'
+      summary: Get all workers
+      tags:
+      - workers
+    post:
+      consumes:
+      - application/json
+      description: Создание нового работника в базе данных
+      parameters:
+      - description: Worker info
+        in: body
+        name: input
+        required: true
+        schema:
+          $ref: '#/definitions/httpapi.Worker'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: ID созданного работника
+          schema:
+            additionalProperties: true
+            type: object
+        "400":
+          description: Неверный формат данных
+          schema:
+            $ref: '#/definitions/handler.errorResponse'
+        "500":
+          description: Ошибка сервера
+          schema:
+            $ref: '#/definitions/handler.errorResponse'
+      summary: Add a new worker
+      tags:
+      - workers
+  /workers/{id}:
+    get:
+      description: Получение информации о работнике по его ID
+      parameters:
+      - description: Worker ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Данные о работнике
+          schema:
+            $ref: '#/definitions/handler.serResponse'
+        "400":
+          description: Неверный ID
+          schema:
+            $ref: '#/definitions/handler.errorResponse'
+        "500":
+          description: Ошибка сервера
+          schema:
+            $ref: '#/definitions/handler.errorResponse'
+      summary: Get a worker by ID
+      tags:
+      - workers
+schemes:
+- http
+swagger: "2.0"

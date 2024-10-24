@@ -3,6 +3,11 @@ package handler
 import (
 	"github.com/gin-gonic/gin"
 	"github.com/tsarkovmi/http_api/pkg/service"
+
+	swaggerFiles "github.com/swaggo/files"
+	ginSwagger "github.com/swaggo/gin-swagger"
+
+	_ "github.com/tsarkovmi/http_api/docs"
 )
 
 type Handler struct {
@@ -15,7 +20,10 @@ func Newhandler(services *service.Service) *Handler {
 
 func (h *Handler) InitRourers() *gin.Engine {
 	gin.SetMode(gin.ReleaseMode)
+
 	router := gin.New()
+
+	router.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 
 	router.GET("/workers", h.GetWorkers)
 	router.GET("/workers/:id", h.GetWorkerByID)
@@ -24,12 +32,3 @@ func (h *Handler) InitRourers() *gin.Engine {
 	return router
 
 }
-
-/*
-var workers = []httpapi.Worker{
-	{ID: 1, Name: "Mike Vazov", Age: 46, Salary: 450123.23, Occupation: "Переводчик"},
-	{ID: 2, Name: "Nikolay Mazurin", Age: 24, Salary: 320123.23, Occupation: "Сварщик"},
-	{ID: 3, Name: "Alexey Popov", Age: 64, Salary: 120123.56, Occupation: "Руководитель группы"},
-	{ID: 4, Name: "Anna Leonova", Age: 18, Salary: 170673.56, Occupation: "MANAGER"},
-}
-*/

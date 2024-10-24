@@ -14,8 +14,8 @@
   конфигурация доступа к postgres(address, user, password, database)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**ДА**
 -  Сериализация в разные форматы должна происходить одновременно&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**Вроде ДА**
 -  Должно осуществляться логирование&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**Вроде ДА**
--  Наличие swagger с описанием api.
-#### Будет плюсом (в твоём случае отсутствия ограничения времени это must have):
+-  Наличие swagger с описанием api.&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**Вроде ДА**
+##### Будет плюсом (в твоём случае отсутствия ограничения времени это must have):
 - Наличие тестов
 - Graceful shutdown  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**ДА**
 
