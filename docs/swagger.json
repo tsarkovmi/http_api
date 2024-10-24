@@ -20,5 +20,171 @@
     },
     "host": "localhost:8080",
     "basePath": "/",
-    "paths": {}
+    "paths": {
+        "/workers": {
+            "get": {
+                "description": "Получение списка всех работников из базы данных",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "workers"
+                ],
+                "summary": "Get all workers",
+                "responses": {
+                    "200": {
+                        "description": "Список всех работников",
+                        "schema": {
+                            "$ref": "#/definitions/handler.serResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Ошибка сервера",
+                        "schema": {
+                            "$ref": "#/definitions/handler.errorResponse"
+                        }
+                    }
+                }
+            },
+            "post": {
+                "description": "Создание нового работника в базе данных",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "workers"
+                ],
+                "summary": "Add a new worker",
+                "parameters": [
+                    {
+                        "description": "Worker info",
+                        "name": "input",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/httpapi.Worker"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "ID созданного работника",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": true
+                        }
+                    },
+                    "400": {
+                        "description": "Неверный формат данных",
+                        "schema": {
+                            "$ref": "#/definitions/handler.errorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Ошибка сервера",
+                        "schema": {
+                            "$ref": "#/definitions/handler.errorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/workers/{id}": {
+            "get": {
+                "description": "Получение информации о работнике по его ID",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "workers"
+                ],
+                "summary": "Get a worker by ID",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Worker ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Данные о работнике",
+                        "schema": {
+                            "$ref": "#/definitions/handler.serResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Неверный ID",
+                        "schema": {
+                            "$ref": "#/definitions/handler.errorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Ошибка сервера",
+                        "schema": {
+                            "$ref": "#/definitions/handler.errorResponse"
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "handler.errorResponse": {
+            "type": "object",
+            "properties": {
+                "message": {
+                    "type": "string"
+                }
+            }
+        },
+        "handler.serResponse": {
+            "type": "object",
+            "properties": {
+                "JSON": {
+                    "type": "string"
+                },
+                "TOML": {
+                    "type": "string"
+                },
+                "XML": {
+                    "type": "string"
+                }
+            }
+        },
+        "httpapi.Worker": {
+            "type": "object",
+            "required": [
+                "age",
+                "name",
+                "occupation",
+                "salary"
+            ],
+            "properties": {
+                "age": {
+                    "description": "являются реализацией фреймворка gin",
+                    "type": "integer"
+                },
+                "id": {
+                    "description": "чтобы искало в FindWorkerById",
+                    "type": "integer"
+                },
+                "name": {
+                    "description": "Валидируют наличие данных полей в теле запроса",
+                    "type": "string"
+                },
+                "occupation": {
+                    "type": "string"
+                },
+                "salary": {
+                    "type": "number"
+                }
+            }
+        }
+    }
 }

@@ -9,6 +9,7 @@ import (
 )
 
 // PostWorkers godoc
+//
 //	@Summary		Add a new worker
 //	@Description	Создание нового работника в базе данных
 //	@Tags			workers
@@ -16,10 +17,9 @@ import (
 //	@Produce		json
 //	@Param			input	body		httpapi.Worker			true	"Worker info"
 //	@Success		200		{object}	map[string]interface{}	"ID созданного работника"
-//	@Failure		400		{object}	ErrorResponse			"Неверный формат данных"
-//	@Failure		500		{object}	ErrorResponse			"Ошибка сервера"
+//	@Failure		400		{object}	errorResponse			"Неверный формат данных"
+//	@Failure		500		{object}	errorResponse			"Ошибка сервера"
 //	@Router			/workers [post]
-
 func (h *Handler) PostWorkers(c *gin.Context) {
 	var input httpapi.Worker
 
@@ -46,14 +46,14 @@ func (h *Handler) PostWorkers(c *gin.Context) {
 }
 
 // GetWorkers godoc
+//
 //	@Summary		Get all workers
 //	@Description	Получение списка всех работников из базы данных
 //	@Tags			workers
 //	@Produce		json
 //	@Success		200	{object}	serResponse		"Список всех работников"
-//	@Failure		500	{object}	ErrorResponse	"Ошибка сервера"
+//	@Failure		500	{object}	errorResponse	"Ошибка сервера"
 //	@Router			/workers [get]
-
 func (h *Handler) GetWorkers(c *gin.Context) {
 
 	workers, err := h.services.CRUD.GetAllWorkers()
@@ -75,16 +75,16 @@ func (h *Handler) GetWorkers(c *gin.Context) {
 }
 
 // GetWorkerByID godoc
+//
 //	@Summary		Get a worker by ID
 //	@Description	Получение информации о работнике по его ID
 //	@Tags			workers
 //	@Produce		json
 //	@Param			id	path		int				true	"Worker ID"
 //	@Success		200	{object}	serResponse		"Данные о работнике"
-//	@Failure		500	{object}	ErrorResponse	"Ошибка сервера"
-//	@Failure		400	{object}	ErrorResponse	"Неверный ID"
+//	@Failure		500	{object}	errorResponse	"Ошибка сервера"
+//	@Failure		400	{object}	errorResponse	"Неверный ID"
 //	@Router			/workers/{id} [get]
-
 func (h *Handler) GetWorkerByID(c *gin.Context) {
 	id, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
