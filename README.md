@@ -103,3 +103,6 @@ docker exec -it 9a063294aa50 /bin/bash
 psql -U postgres
 \d
 ```
+
+
+Для тестирования используется следующая библиотека https://github.com/uber-go/mock

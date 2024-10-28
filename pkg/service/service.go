@@ -5,6 +5,11 @@ import (
 	"github.com/tsarkovmi/http_api/pkg/repository"
 )
 
+//Позволяет генерировать код запустив инструмент который указа после команды
+//используем установленную библиотеку мок, в которой указываем имя файла
+//с интерфейсами и место куда сгенерировать моки
+//go:generate mockgen -source=service.go -destination=mocks/mock.go
+
 // Интерфейс для взаимодействия с основной логикой хэндлера
 type CRUD interface {
 	/*
