@@ -24,7 +24,7 @@ func (h *Handler) PostWorkers(c *gin.Context) {
 	var input httpapi.Worker
 
 	if err := c.BindJSON(&input); err != nil {
-		newErrorResponse(c, http.StatusBadRequest, err.Error())
+		newErrorResponse(c, http.StatusBadRequest, "invalid input body")
 		return
 	}
 
@@ -93,7 +93,7 @@ func (h *Handler) GetWorkerByID(c *gin.Context) {
 
 	worker, err := h.services.CRUD.FindWorkerByID(id)
 	if err != nil {
-		newErrorResponse(c, http.StatusInternalServerError, err.Error())
+		newErrorResponse(c, http.StatusNotFound, "worker not found")
 		return
 	}
 
@@ -101,7 +101,7 @@ func (h *Handler) GetWorkerByID(c *gin.Context) {
 	err = resp.serializeWorker(worker)
 
 	if err != nil {
-		newErrorResponse(c, http.StatusInternalServerError, err.Error())
+		newErrorResponse(c, http.StatusBadRequest, err.Error())
 		return
 	}
 	c.IndentedJSON(http.StatusOK, resp)
