@@ -16,7 +16,7 @@
 -  Должно осуществляться логирование&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**Вроде ДА**
 -  Наличие swagger с описанием api.&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**Вроде ДА**
 ##### Будет плюсом (в твоём случае отсутствия ограничения времени это must have):
-- Наличие тестов
+- Наличие тестов &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**Вроде ДА**
 - Graceful shutdown  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**ДА**
 
 
@@ -103,3 +103,12 @@ docker exec -it 9a063294aa50 /bin/bash
 psql -U postgres
 \d
 ```
+
+
+Для тестирования используется следующая библиотека 
+https://github.com/uber-go/mock
+
+Для тестирования репозитория использовалась 
+https://github.com/zhashkevych/go-sqlxmock
+
+Также Тестифай, для ассертов, итого 16 тестов
