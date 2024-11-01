@@ -3,7 +3,7 @@ name: http-app
 services:
   httpapi:
     build: ./
-    command: ./httpapi
+    command: ./wait-for-postgres.sh db ./httpapi
     ports:
       - 8080:8080
     depends_on:

@@ -12,7 +12,7 @@ RUN apt-get update
 RUN apt-get -y install postgresql-client
 
 # Делаем скрип для ожидания в виде запускаемой программы
-#RUN chmod +x wait-for-postgres.sh
+RUN chmod +x wait-for-postgres.sh
 
 # Скачивание зависимостей и компиляция 
 # приложения через go build
