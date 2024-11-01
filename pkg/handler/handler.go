@@ -10,14 +10,27 @@ import (
 	_ "github.com/tsarkovmi/http_api/docs"
 )
 
+/*
+Структура обработчика
+*/
 type Handler struct {
 	services *service.Service
 }
 
+/*
+Конструктор для структуры Handler. Инициализирует экземпляр структуры
+Прослойка между хэндлером и сервисом
+*/
 func Newhandler(services *service.Service) *Handler {
 	return &Handler{services: services}
 }
 
+/*
+Инициализирует и настраивает маршрутизатор gin
+Устанавливаю gin в ReleaseMode, чтобы не логировалась отладочная информация
+Далее устнанавливаются маршруты для эндпоинтов и для Swagger
+Возвращает маршрутизатор с установленными маршрутами
+*/
 func (h *Handler) InitRourers() *gin.Engine {
 	gin.SetMode(gin.ReleaseMode)
 

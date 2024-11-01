@@ -8,10 +8,19 @@ import (
 	httpapi "github.com/tsarkovmi/http_api"
 )
 
+/*
+	Обработка POST запроса для создания нового worker в БД
+	Извлекает и валидирует JSON из тела запроса
+	Если входные данные некорректны метод возвращает HTTP ответ с кодом 400
+	и сообщением об ошибке
+	Далее данные передаеются на слой сервиса через метод CreateWorker
+	В случае ошибки на сервисе - 500 и сообщение об ошибке
+	Если всё ок, то возвращает ID созданной записи и 200
+*/
 // PostWorkers godoc
 //
 //	@Summary		Add a new worker
-//	@Description	Создание нового работника в базе данных
+//	@Description	Этот метод обрабатывает POST-запрос для создания нового воркера
 //	@Tags			workers
 //	@Accept			json
 //	@Produce		json
@@ -45,10 +54,17 @@ func (h *Handler) PostWorkers(c *gin.Context) {
 	})
 }
 
+/*
+	GET запрос для получения списка всех worker
+	Вызывает метод GetAllWokers из слоя сервиса, чтобы получить все записи
+	В случае ошибки - 500 и сообщение об ошибки
+	Далее данные передаются в метод serializeWorker для форматирования
+	Возвращает JSON со всеми worker в 3 форматах, и кодом 200
+*/
 // GetWorkers godoc
 //
 //	@Summary		Get all workers
-//	@Description	Получение списка всех работников из базы данных
+//	@Description	Получение списка всех worker из базы данных
 //	@Tags			workers
 //	@Produce		json
 //	@Success		200	{object}	serResponse		"Список всех работников"
@@ -74,6 +90,14 @@ func (h *Handler) GetWorkers(c *gin.Context) {
 
 }
 
+/*
+	GET запрос для получения конкретного worker по ID
+	Извлечение ID с помощью Atoi и проверка валидации
+	Далее вызывается метод из слоя сервиса, для получения данных
+	Если рабочий не найден 404 и сообщение об ошибке
+	В случае успеха данные передаются для форматирования в serializeWorker
+	Возвращает JSON с тремя полями в заданных форматах
+*/
 // GetWorkerByID godoc
 //
 //	@Summary		Get a worker by ID
@@ -84,10 +108,12 @@ func (h *Handler) GetWorkers(c *gin.Context) {
 //	@Success		200	{object}	serResponse		"Данные о работнике"
 //	@Failure		500	{object}	errorResponse	"Ошибка сервера"
 //	@Failure		400	{object}	errorResponse	"Неверный ID"
+//	@Failure		404	{object}	errorResponse	"Работник не найден"
 //	@Router			/workers/{id} [get]
 func (h *Handler) GetWorkerByID(c *gin.Context) {
 	id, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
+		newErrorResponse(c, http.StatusBadRequest, "invalid worker ID")
 		return
 	}
 

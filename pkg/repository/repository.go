@@ -5,7 +5,7 @@ import (
 	httpapi "github.com/tsarkovmi/http_api"
 )
 
-// Интерфейс для взаимодействия с основной логикой хэндлеря
+// Интерфейс для взаимодействия с основной логикой хэндлера
 type CRUD interface {
 	CreateWorker(worker httpapi.Worker) (int, error)
 	FindWorkerByID(workerId int) (httpapi.Worker, error)

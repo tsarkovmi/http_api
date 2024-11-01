@@ -11,6 +11,9 @@ type PostPostgres struct {
 	db *sqlx.DB
 }
 
+/*
+Конструктор для создания указателя на оболочку БД
+*/
 func NewPostPostgres(db *sqlx.DB) *PostPostgres {
 	return &PostPostgres{db: db}
 }

@@ -10,6 +10,10 @@ type Server struct {
 	httpServer *http.Server
 }
 
+/*
+В структуре заполняются необходимые поля
+и возвращается ListenAndServe()
+*/
 func (s *Server) Run(port string, handler http.Handler) error {
 	/*
 		Инициализировали router
@@ -25,6 +29,9 @@ func (s *Server) Run(port string, handler http.Handler) error {
 	return s.httpServer.ListenAndServe()
 }
 
+/*
+Оболочка для передачи метода Shudown
+*/
 func (s *Server) Shutdown(ctx context.Context) error {
 	return s.httpServer.Shutdown(ctx)
 }

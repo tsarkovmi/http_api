@@ -8,12 +8,18 @@ import (
 	"github.com/sirupsen/logrus"
 )
 
+/*
+Структура для респоса, который будет отправлен в качестве ответа
+*/
 type serResponse struct {
 	JsonResp string `json:"JSON"`
 	XmlResp  string `json:"XML"`
 	TomlResp string `json:"TOML"`
 }
 
+/*
+Конструктор инициализирующий сериализованный респонс
+*/
 func initSerResponse() *serResponse {
 	return &serResponse{
 		JsonResp: "",
@@ -22,6 +28,15 @@ func initSerResponse() *serResponse {
 	}
 }
 
+/*
+Метод сериализатор, обеспечивающая одновременную сериализацию результата
+На вход поступает интерфейс, который обеспечивают работу с любыми входными данными
+
+Для синхронизации используются каналы
+Вызываются анонимные функции горутины, в которых по завершению закрываются каналы
+В каждой горутине используется библиотечная сериализация данных и запись в канал
+Для последующей передачи в сериализованный Респонс serResponse
+*/
 func (resp *serResponse) serializeWorker(data interface{}) error {
 	jsonCh := make(chan string)
 	xmlCh := make(chan string)

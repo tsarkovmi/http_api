@@ -206,16 +206,25 @@ func TestHandler_GetWorkerByID(t *testing.T) {
 			name:    "Worker Not Found",
 			idParam: "1",
 			mockBehavior: func(s *mock_service.MockCRUD, id int) {
-				s.EXPECT().FindWorkerByID(id).Return(httpapi.Worker{
-					ID:         1,
-					Name:       "John Doe",
-					Age:        30,
-					Salary:     3000.0,
-					Occupation: "Engineer",
-				}, errors.New("worker not found"))
+				s.EXPECT().FindWorkerByID(id).Return(httpapi.Worker{}, errors.New("worker not found"))
 			},
 			expectedStatusCode:   404,
 			expectedResponseBody: `{"message":"worker not found"}`,
+		},
+		{
+			name:                 "Invalid ID",
+			idParam:              "invalidID",
+			mockBehavior:         func(s *mock_service.MockCRUD, id int) {},
+			expectedStatusCode:   400,
+			expectedResponseBody: `{"message":"invalid worker ID"}`,
+		},
+		{
+			name: "Internal Server Error",
+			mockBehavior: func(s *mock_service.MockCRUD, id int) {
+				s.EXPECT().GetAllWorkers().Return(nil, errors.New("internal server error"))
+			},
+			expectedStatusCode:   500,
+			expectedResponseBody: `{"message":"internal server error"}`,
 		},
 	}
 

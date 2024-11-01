@@ -34,15 +34,24 @@ import (
 //	@schemes	http
 
 func main() {
+	/*
+		Включаем логирование, и считываем конфиг
+		с помощью библиотеки viper
+	*/
 	logrus.SetFormatter(new(logrus.JSONFormatter))
 	if err := initConfig(); err != nil {
 		logrus.Fatalf("error init configs: %s", err.Error())
 	}
-
+	/*
+		Считываем .env файл
+	*/
 	if err := godotenv.Load(); err != nil {
 		logrus.Fatalf("error loadint env file: %s", err.Error())
 	}
-
+	/*
+		Здесь инициализируем репозиторий, считываем во все необходимые поля
+		То, что считали выше, теперь записываем в поля структуры Config
+	*/
 	db, err := repository.NewPostgresDB(repository.Config{
 		Host:     viper.GetString("db.host"),
 		Port:     viper.GetString("db.port"),
@@ -56,12 +65,26 @@ func main() {
 		logrus.Fatalf("error init db: %s", err.Error())
 	}
 
-	//внедряем зависимости по порядку
+	/*
+		По порядку поднимаем сервис
+		Сначала передаем указатель на БД метод NewRepository
+		Который просто оборачивает БД в структуру Repostory, чтобы связать все слои интерфейсами
+		Аналогичная процедура делается для Сервиса и Хэндлера
+		Таким образом все слои связаны и общаются друг с другом с помощью интерфейсов
+	*/
 
 	repos := repository.NewRepository(db)
 	services := service.NewService(repos)
 	handlers := handler.Newhandler(services)
 
+	/*
+		Инициализируем сервер
+		А далее запускаем с помощью метода Run
+		В методе Run передаём порт, на котором будет запускаться сервер
+		А также передаем Хэндлер, сразу же инициализируя его создавая необходимые HTTP запросы
+		Возвращаем метод ListenAndServe
+		Логируем в случае ошибки
+	*/
 	srv := new(httpapi.Server)
 	//GRACEFUL SHUTDOWN
 	go func() {
@@ -70,14 +93,24 @@ func main() {
 		}
 	}()
 	logrus.Print("http app Started")
-
+	/*
+		Создаем GRACEFUL SHUTDOWN
+		Канал quit, который будет удерживать main от завершения работы
+		Как только будет получен SIGTERM или SIGINT канал закроется и мейн пойдёт дальше
+		Логируем завершение программы
+	*/
 	quit := make(chan os.Signal, 1)
 	signal.Notify(quit, syscall.SIGTERM, syscall.SIGINT)
 	<-quit
 
 	logrus.Print("http app Shutting Down")
-
-	//То, что возвращается Fatal - нормально, так и должно быть
+	/*
+		Теперь вызывается метод Shutdown, который поочереди закрывает все листенеры, не прерывая активных подключений,
+		затем закрывает все бездействующие подключения. Ожидает пока все подключения не вернутся в состояние бездействия,
+		а затем завершает работу
+		Далее закрывает подключение к БД.
+	*/
+	//То, что возвращается Fatal - нормально
 	if err := srv.Shutdown(context.Background()); err != nil {
 		logrus.Errorf("error occured on server shutting down: %s", err.Error())
 	}
@@ -86,6 +119,10 @@ func main() {
 	}
 }
 
+/*
+Считываем из Директории configs
+файл с названием config
+*/
 func initConfig() error {
 	viper.AddConfigPath("configs")
 	viper.SetConfigName("config")
