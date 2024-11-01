@@ -12,9 +12,9 @@
 - Dockerfile, все должно подниматься с помощью docker compose&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; **ДА**
 - Конфигурация порта, на котором будет запускаться сервис, 
   конфигурация доступа к postgres(address, user, password, database)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**ДА**
--  Сериализация в разные форматы должна происходить одновременно&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**Вроде ДА**
+-  Сериализация в разные форматы должна происходить одновременно&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**ДА**
 -  Должно осуществляться логирование&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**Вроде ДА**
--  Наличие swagger с описанием api.&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**Вроде ДА**
+-  Наличие swagger с описанием api.&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**ДА**
 ##### Будет плюсом (в твоём случае отсутствия ограничения времени это must have):
 - Наличие тестов &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**Вроде ДА**
 - Graceful shutdown  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**ДА**
