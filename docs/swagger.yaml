@@ -17,15 +17,16 @@ definitions:
   httpapi.Worker:
     properties:
       age:
-        description: являются реализацией фреймворка gin
+        maximum: 70
+        minimum: 18
         type: integer
       id:
-        description: чтобы искало в FindWorkerById
         type: integer
       name:
-        description: Валидируют наличие данных полей в теле запроса
+        maxLength: 50
         type: string
       occupation:
+        maxLength: 100
         type: string
       salary:
         type: number
@@ -51,7 +52,7 @@ info:
 paths:
   /workers:
     get:
-      description: Получение списка всех работников из базы данных
+      description: Получение списка всех worker из базы данных
       produces:
       - application/json
       responses:
@@ -69,7 +70,7 @@ paths:
     post:
       consumes:
       - application/json
-      description: Создание нового работника в базе данных
+      description: Этот метод обрабатывает POST-запрос для создания нового воркера
       parameters:
       - description: Worker info
         in: body
@@ -116,8 +117,8 @@ paths:
           description: Неверный ID
           schema:
             $ref: '#/definitions/handler.errorResponse'
-        "500":
-          description: Ошибка сервера
+        "404":
+          description: Работник не найден
           schema:
             $ref: '#/definitions/handler.errorResponse'
       summary: Get a worker by ID

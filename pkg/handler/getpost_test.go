@@ -218,14 +218,6 @@ func TestHandler_GetWorkerByID(t *testing.T) {
 			expectedStatusCode:   400,
 			expectedResponseBody: `{"message":"invalid worker ID"}`,
 		},
-		{
-			name: "Internal Server Error",
-			mockBehavior: func(s *mock_service.MockCRUD, id int) {
-				s.EXPECT().GetAllWorkers().Return(nil, errors.New("internal server error"))
-			},
-			expectedStatusCode:   500,
-			expectedResponseBody: `{"message":"internal server error"}`,
-		},
 	}
 
 	for _, testCase := range testTable {

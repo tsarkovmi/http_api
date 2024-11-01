@@ -106,7 +106,6 @@ func (h *Handler) GetWorkers(c *gin.Context) {
 //	@Produce		json
 //	@Param			id	path		int				true	"Worker ID"
 //	@Success		200	{object}	serResponse		"Данные о работнике"
-//	@Failure		500	{object}	errorResponse	"Ошибка сервера"
 //	@Failure		400	{object}	errorResponse	"Неверный ID"
 //	@Failure		404	{object}	errorResponse	"Работник не найден"
 //	@Router			/workers/{id} [get]
@@ -127,7 +126,7 @@ func (h *Handler) GetWorkerByID(c *gin.Context) {
 	err = resp.serializeWorker(worker)
 
 	if err != nil {
-		newErrorResponse(c, http.StatusBadRequest, err.Error())
+		newErrorResponse(c, http.StatusInternalServerError, err.Error())
 		return
 	}
 	c.IndentedJSON(http.StatusOK, resp)

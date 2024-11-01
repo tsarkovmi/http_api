@@ -26,7 +26,7 @@ const docTemplate = `{
     "paths": {
         "/workers": {
             "get": {
-                "description": "Получение списка всех работников из базы данных",
+                "description": "Получение списка всех worker из базы данных",
                 "produces": [
                     "application/json"
                 ],
@@ -50,7 +50,7 @@ const docTemplate = `{
                 }
             },
             "post": {
-                "description": "Создание нового работника в базе данных",
+                "description": "Этот метод обрабатывает POST-запрос для создания нового воркера",
                 "consumes": [
                     "application/json"
                 ],
@@ -127,8 +127,8 @@ const docTemplate = `{
                             "$ref": "#/definitions/handler.errorResponse"
                         }
                     },
-                    "500": {
-                        "description": "Ошибка сервера",
+                    "404": {
+                        "description": "Работник не найден",
                         "schema": {
                             "$ref": "#/definitions/handler.errorResponse"
                         }
@@ -170,19 +170,20 @@ const docTemplate = `{
             ],
             "properties": {
                 "age": {
-                    "description": "являются реализацией фреймворка gin",
-                    "type": "integer"
+                    "type": "integer",
+                    "maximum": 70,
+                    "minimum": 18
                 },
                 "id": {
-                    "description": "чтобы искало в FindWorkerById",
                     "type": "integer"
                 },
                 "name": {
-                    "description": "Валидируют наличие данных полей в теле запроса",
-                    "type": "string"
+                    "type": "string",
+                    "maxLength": 50
                 },
                 "occupation": {
-                    "type": "string"
+                    "type": "string",
+                    "maxLength": 100
                 },
                 "salary": {
                     "type": "number"

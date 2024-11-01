@@ -42,14 +42,19 @@ func (resp *serResponse) serializeWorker(data interface{}) error {
 	xmlCh := make(chan string)
 	tomlCh := make(chan string)
 
+	errCh := make(chan error, 3)
+	defer close(errCh)
+
 	go func() {
 		defer close(jsonCh)
 		jsonData, err := json.Marshal(data)
 		if err != nil {
 			logrus.Printf("Ошибка сериализации JSON: %v", err)
+			errCh <- err
 			return
 		}
 		jsonCh <- string(jsonData)
+		errCh <- nil
 	}()
 
 	go func() {
@@ -57,9 +62,11 @@ func (resp *serResponse) serializeWorker(data interface{}) error {
 		xmlData, err := xml.Marshal(data)
 		if err != nil {
 			logrus.Printf("Ошибка сериализации XML: %v", err)
+			errCh <- err
 			return
 		}
 		xmlCh <- string(xmlData)
+		errCh <- nil
 	}()
 
 	go func() {
@@ -67,14 +74,22 @@ func (resp *serResponse) serializeWorker(data interface{}) error {
 		tomlData, err := toml.Marshal(data)
 		if err != nil {
 			logrus.Printf("Ошибка сериализации TOML: %v", err)
+			errCh <- err
 			return
 		}
 		tomlCh <- string(tomlData)
+		errCh <- nil
 	}()
 
 	resp.JsonResp = <-jsonCh
 	resp.XmlResp = <-xmlCh
 	resp.TomlResp = <-tomlCh
+
+	for i := 0; i < 3; i++ {
+		if err := <-errCh; err != nil {
+			return err
+		}
+	}
 
 	return nil
 }
