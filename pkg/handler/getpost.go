@@ -5,6 +5,7 @@ import (
 	"strconv"
 
 	"github.com/gin-gonic/gin"
+	"github.com/sirupsen/logrus"
 	httpapi "github.com/tsarkovmi/http_api"
 )
 
@@ -31,8 +32,8 @@ import (
 //	@Router			/workers [post]
 func (h *Handler) PostWorkers(c *gin.Context) {
 	var input httpapi.Worker
-
 	if err := c.BindJSON(&input); err != nil {
+		logrus.Warnf("Invalid input body: %v", err)
 		newErrorResponse(c, http.StatusBadRequest, "invalid input body")
 		return
 	}
@@ -45,10 +46,12 @@ func (h *Handler) PostWorkers(c *gin.Context) {
 
 	id, err := h.services.CRUD.CreateWorker(input)
 	if err != nil {
+		logrus.Errorf("Failed to create worker: %v", err)
 		newErrorResponse(c, http.StatusInternalServerError, err.Error())
 		return
 	}
 
+	logrus.Infof("Worker created with ID: %d", id)
 	c.JSON(http.StatusOK, map[string]interface{}{
 		"id": id,
 	})
@@ -74,6 +77,7 @@ func (h *Handler) GetWorkers(c *gin.Context) {
 
 	workers, err := h.services.CRUD.GetAllWorkers()
 	if err != nil {
+		logrus.Errorf("Error retrieving workers: %v", err)
 		newErrorResponse(c, http.StatusInternalServerError, err.Error())
 		return
 	}
@@ -82,10 +86,12 @@ func (h *Handler) GetWorkers(c *gin.Context) {
 
 	err = resp.serializeWorker(workers)
 	if err != nil {
+		logrus.Errorf("Error serializing worker data: %v", err)
 		newErrorResponse(c, http.StatusInternalServerError, err.Error())
 		return
 	}
 
+	logrus.Infof("Retrieved %d workers", len(workers))
 	c.IndentedJSON(http.StatusOK, resp)
 
 }
@@ -112,12 +118,14 @@ func (h *Handler) GetWorkers(c *gin.Context) {
 func (h *Handler) GetWorkerByID(c *gin.Context) {
 	id, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
+		logrus.Warnf("Invalid worker ID: %v", err)
 		newErrorResponse(c, http.StatusBadRequest, "invalid worker ID")
 		return
 	}
 
 	worker, err := h.services.CRUD.FindWorkerByID(id)
 	if err != nil {
+		logrus.Infof("Worker with ID %d not found", id)
 		newErrorResponse(c, http.StatusNotFound, "worker not found")
 		return
 	}
@@ -126,9 +134,11 @@ func (h *Handler) GetWorkerByID(c *gin.Context) {
 	err = resp.serializeWorker(worker)
 
 	if err != nil {
+		logrus.Errorf("Error serializing worker data for ID %d: %v", id, err)
 		newErrorResponse(c, http.StatusInternalServerError, err.Error())
 		return
 	}
+	logrus.Infof("Retrieved worker with ID: %d", id)
 	c.IndentedJSON(http.StatusOK, resp)
 
 }

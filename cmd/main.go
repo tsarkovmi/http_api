@@ -39,6 +39,7 @@ func main() {
 		с помощью библиотеки viper
 	*/
 	logrus.SetFormatter(new(logrus.JSONFormatter))
+	logrus.Info("Initializing configuration with Viper")
 	if err := initConfig(); err != nil {
 		logrus.Fatalf("error init configs: %s", err.Error())
 	}
@@ -52,6 +53,7 @@ func main() {
 		Здесь инициализируем репозиторий, считываем во все необходимые поля
 		То, что считали выше, теперь записываем в поля структуры Config
 	*/
+	logrus.Info("Connecting to the database")
 	db, err := repository.NewPostgresDB(repository.Config{
 		Host:     viper.GetString("db.host"),
 		Port:     viper.GetString("db.port"),
@@ -72,9 +74,11 @@ func main() {
 		Аналогичная процедура делается для Сервиса и Хэндлера
 		Таким образом все слои связаны и общаются друг с другом с помощью интерфейсов
 	*/
-
+	logrus.Info("Initializing repository")
 	repos := repository.NewRepository(db)
+	logrus.Info("Initializing service layer")
 	services := service.NewService(repos)
+	logrus.Info("Initializing handlers")
 	handlers := handler.Newhandler(services)
 
 	/*
@@ -85,6 +89,7 @@ func main() {
 		Возвращаем метод ListenAndServe
 		Логируем в случае ошибки
 	*/
+	logrus.Info("Starting HTTP server")
 	srv := new(httpapi.Server)
 	//GRACEFUL SHUTDOWN
 	go func() {
