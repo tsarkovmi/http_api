@@ -12,13 +12,6 @@ type CRUD interface {
 	GetAllWorkers() ([]httpapi.Worker, error)
 }
 
-// Структура для интерфейса
-type Repository struct {
-	CRUD
-}
-
-func NewRepository(db *sqlx.DB) *Repository {
-	return &Repository{
-		CRUD: NewPostPostgres(db),
-	}
+func NewRepository(db *sqlx.DB) CRUD {
+	return NewPostPostgres(db)
 }

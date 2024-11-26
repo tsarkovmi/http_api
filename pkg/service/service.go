@@ -21,15 +21,27 @@ type CRUD interface {
 	GetAllWorkers() ([]httpapi.Worker, error)
 }
 
-// Структура для интерфейса, вызывается из хэндлера
-type Service struct {
-	CRUD
+/*НАШЁЛ*/
+type PostService struct {
+	repo repository.CRUD
 }
 
-// Сервис получает на вход Репозиторий, сам сервис вызывается из хэндлера
-// ЭТО И ЕСТЬ ВНЕДРЕНИЕ ЗАВИСИМОСТЕЙ
-func NewService(repos *repository.Repository) *Service {
-	return &Service{
-		CRUD: NewPostService(repos.CRUD),
-	}
+// Конструктор для Service
+func NewService(repo repository.CRUD) *PostService {
+	return &PostService{repo: repo}
+}
+
+// Реализация метода CreateWorker для интерфейса на слое Service
+func (s *PostService) CreateWorker(worker httpapi.Worker) (int, error) {
+	return s.repo.CreateWorker(worker)
+}
+
+// Реализация метода FindWorkerByID для интерфейса на слое Service
+func (s *PostService) FindWorkerByID(workerId int) (httpapi.Worker, error) {
+	return s.repo.FindWorkerByID(workerId)
+}
+
+// Реализация метода GetAllWorkers для интерфейса на слое Service
+func (s *PostService) GetAllWorkers() ([]httpapi.Worker, error) {
+	return s.repo.GetAllWorkers()
 }

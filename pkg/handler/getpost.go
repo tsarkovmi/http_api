@@ -44,7 +44,7 @@ func (h *Handler) PostWorkers(c *gin.Context) {
 		В СЕРВИС
 	*/
 
-	id, err := h.services.CRUD.CreateWorker(input)
+	id, err := h.Services.CreateWorker(input)
 	if err != nil {
 		logrus.Errorf("Failed to create worker: %v", err)
 		newErrorResponse(c, http.StatusInternalServerError, err.Error())
@@ -75,7 +75,7 @@ func (h *Handler) PostWorkers(c *gin.Context) {
 //	@Router			/workers [get]
 func (h *Handler) GetWorkers(c *gin.Context) {
 
-	workers, err := h.services.CRUD.GetAllWorkers()
+	workers, err := h.Services.GetAllWorkers()
 	if err != nil {
 		logrus.Errorf("Error retrieving workers: %v", err)
 		newErrorResponse(c, http.StatusInternalServerError, err.Error())
@@ -123,7 +123,7 @@ func (h *Handler) GetWorkerByID(c *gin.Context) {
 		return
 	}
 
-	worker, err := h.services.CRUD.FindWorkerByID(id)
+	worker, err := h.Services.FindWorkerByID(id)
 	if err != nil {
 		logrus.Infof("Worker with ID %d not found", id)
 		newErrorResponse(c, http.StatusNotFound, "worker not found")

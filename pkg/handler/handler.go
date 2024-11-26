@@ -14,15 +14,15 @@ import (
 Структура обработчика
 */
 type Handler struct {
-	services *service.Service
+	Services service.CRUD
 }
 
 /*
 Конструктор для структуры Handler. Инициализирует экземпляр структуры
 Прослойка между хэндлером и сервисом
 */
-func Newhandler(services *service.Service) *Handler {
-	return &Handler{services: services}
+func Newhandler(services service.CRUD) *Handler {
+	return &Handler{Services: services}
 }
 
 /*
@@ -31,7 +31,7 @@ func Newhandler(services *service.Service) *Handler {
 Далее устнанавливаются маршруты для эндпоинтов и для Swagger
 Возвращает маршрутизатор с установленными маршрутами
 */
-func (h *Handler) InitRourers() *gin.Engine {
+func (h *Handler) InitRouters() *gin.Engine {
 	gin.SetMode(gin.ReleaseMode)
 
 	router := gin.New()

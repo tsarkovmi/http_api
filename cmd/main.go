@@ -93,7 +93,7 @@ func main() {
 	srv := new(httpapi.Server)
 	//GRACEFUL SHUTDOWN
 	go func() {
-		if err := srv.Run(viper.GetString("port"), handlers.InitRourers()); err != nil {
+		if err := srv.Run(viper.GetString("port"), handlers.InitRouters()); err != nil {
 			logrus.Fatalf("error running http server: %s", err.Error())
 		}
 	}()
